@@ -36,27 +36,27 @@ if (!TOKEN_ADDRESS || !isAddress(TOKEN_ADDRESS)) {
   process.exit(1);
 }
 
-const RPC_URL = "http://127.0.0.1:8545";
+const RPC_URL = "https://ethereum-sepolia-rpc.publicnode.com";
 if (!RPC_URL) {
   console.error("❌ 请先设置 SEPOLIA_RPC_URL");
   process.exit(1);
 }
-// const sepolia = defineChain({
-//   id: 11155111,
-//   name: "Sepolia",
+const sepolia = defineChain({
+  id: 11155111,
+  name: "Sepolia",
 
-//   nativeCurrency: {
-//     name: "Sepolia Ether",
-//     symbol: "ETH",
-//     decimals: 18,
-//   },
+  nativeCurrency: {
+    name: "Sepolia Ether",
+    symbol: "ETH",
+    decimals: 18,
+  },
 
-//   rpcUrls: {
-//     default: {
-//       http: [RPC_URL],
-//     },
-//   },
-// });
+  rpcUrls: {
+    default: {
+      http: [RPC_URL],
+    },
+  },
+});
 
 const anvil = defineChain({
     id: 31337,
@@ -138,7 +138,7 @@ const erc20Abi = [
 ];
 
 const publicClient = createPublicClient({
-  chain: anvil,
+  chain: sepolia,
   transport: http(RPC_URL),
 });
 
@@ -218,7 +218,7 @@ async function buildERC20Transaction(address,amountStr) {
     const data = encodeFunctionData({
         abi: erc20Abi,
         functionName: "transfer",
-        args: ["0x233a4C93bd1FD06Be794877C48061D9BacF2FcED", amount],
+        args: ["0xA9c4d41C082E9b79294085AcA09dcb66D28BDC64", amount],
     });
 
     // 构建 EIP-1559 交易
@@ -262,7 +262,7 @@ async function signTransaction(account, tx) {
 
     const walletClient = createWalletClient({
         account,
-        chain: anvil,
+        chain: sepolia,
         transport: http(RPC_URL),
     });
 
@@ -325,10 +325,10 @@ async function main() {
     console.log("生成钱包address:", wallet.address);
     console.log("生成钱包privateKey:", wallet.privateKey);
 
-    showBalance("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+    showBalance("0xCBA8571b35363eb6A40e713e5b8Dc9a4e56a5D73");
 
     const account = privateKeyToAccount(
-    "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+    "0xe2ba96aae7015ff985b700e3acc39db1207eede8fcb1bdadff426ca94fbfff03"
 );
 
     const tx = await buildERC20Transaction(account,amountStr);
